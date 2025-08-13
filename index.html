@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project Registration Form</title>
 <style>
-    /* Basic Reset */
     * {
         margin: 0;
         padding: 0;
@@ -16,10 +15,10 @@
     body {
         background: linear-gradient(135deg, #e6d0eb, #c8a2c8);
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
         min-height: 100vh;
-        overflow: hidden;
+        padding: 20px;
     }
 
     /* Floating Animation Background */
@@ -29,6 +28,7 @@
         opacity: 0.2;
         background: white;
         animation: float 6s ease-in-out infinite;
+        z-index: 0;
     }
 
     .bg-shape:nth-child(1) {
@@ -62,6 +62,7 @@
         animation: fadeIn 1.2s ease forwards;
         transform: translateY(50px);
         opacity: 0;
+        z-index: 1;
     }
 
     @keyframes fadeIn {
@@ -79,7 +80,6 @@
         position: relative;
     }
 
-    /* Underline Animation for Heading */
     .form-container h2::after {
         content: '';
         position: absolute;
@@ -97,7 +97,6 @@
         to { width: 60px; }
     }
 
-    /* Input Fields */
     .form-group {
         margin-bottom: 18px;
         position: relative;
@@ -127,7 +126,6 @@
         transform: scale(1.02);
     }
 
-    /* Button Styling */
     button {
         background: linear-gradient(45deg, #c8a2c8, #a66cae);
         border: none;
@@ -146,10 +144,54 @@
         box-shadow: 0px 5px 15px rgba(166, 108, 174, 0.4);
     }
 
-    /* Subtle Glow Animation */
-    @keyframes glow {
-        0%, 100% { box-shadow: 0px 0px 5px rgba(166, 108, 174, 0.4); }
-        50% { box-shadow: 0px 0px 15px rgba(166, 108, 174, 0.7); }
+    /* Card Styles */
+    .card-container {
+        margin-top: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        justify-content: center;
+        z-index: 1;
+    }
+
+    .card {
+        background: white;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        width: 250px;
+        position: relative;
+        animation: slideUp 0.4s ease-in-out;
+    }
+
+    .card h3 {
+        color: #6a0dad;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+    .delete-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ff4d6d;
+        border: none;
+        color: white;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    @keyframes slideUp {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
     }
 </style>
 </head>
@@ -162,7 +204,7 @@
     <!-- Registration Form -->
     <div class="form-container">
         <h2>Project Registration</h2>
-        <form>
+        <form id="regForm">
             <div class="form-group">
                 <label for="name">Full Name</label>
                 <input type="text" id="name" placeholder="Enter your full name" required>
@@ -209,6 +251,42 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+
+    <!-- Cards Section -->
+    <div class="card-container" id="cardContainer"></div>
+
+<script>
+    document.getElementById("regForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const dept = document.getElementById("dept").value;
+        const year = document.getElementById("year").value;
+        const project = document.getElementById("project").value;
+        const desc = document.getElementById("desc").value;
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+            <button class="delete-btn">&times;</button>
+            <h3>${name}</h3>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Dept:</strong> ${dept}</p>
+            <p><strong>Year:</strong> ${year}</p>
+            <p><strong>Project:</strong> ${project}</p>
+            <p>${desc}</p>
+        `;
+
+        card.querySelector(".delete-btn").addEventListener("click", function() {
+            card.remove();
+        });
+
+        document.getElementById("cardContainer").appendChild(card);
+
+        this.reset();
+    });
+</script>
 
 </body>
 </html>
